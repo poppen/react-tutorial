@@ -1,8 +1,18 @@
-import {React, useState} from 'react'
+import { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-const calculateWinner = (squares) => {
+type SquareProps = {
+  onClick: () => void,
+  value: string | null,
+}
+
+type BoardProps = {
+  squares: Array<string>,
+  onClick: (i: number) => void,
+}
+
+const calculateWinner = (squares: Array<string>): string | null => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -23,23 +33,23 @@ const calculateWinner = (squares) => {
   return null;
 }
 
-const Square = (props) => {
+const Square = (props: SquareProps) => {
   return (
     <button className="square"
-    onClick={props.onClick}>
+      onClick={props.onClick}>
       {props.value}
     </button>
   );
 }
 
-const Board = (props) => {
-  const renderSquare = (i) => {
+const Board = (props: BoardProps) => {
+  const renderSquare = (i: number) => {
     return (
       <Square
-       value={props.squares[i]}
-       onClick={() => {
-        props.onClick(i);
-      }}/>
+        value={props.squares[i]}
+        onClick={() => {
+          props.onClick(i);
+        }} />
     );
   }
 
@@ -71,7 +81,7 @@ const Game = () => {
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXisNext] = useState(true);
 
-  const handleClick = (i) => {
+  const handleClick = (i: number) => {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
@@ -81,13 +91,13 @@ const Game = () => {
     squares[i] = xIsNext ? 'X' : 'O';
 
     setHistory(history.concat([{
-        squares: squares,
+      squares: squares,
     }]));
     setStepNumber(history.length);
     setXisNext(!xIsNext);
   }
 
-  const jumpTo = (step) => {
+  const jumpTo = (step: number) => {
     setHistory(history.slice(0, step + 1));
     setStepNumber(step);
     setXisNext((step % 2) === 0);
@@ -101,7 +111,7 @@ const Game = () => {
       'Go to game start';
     return (
       <li key={move}>
-        <button onClick={() => {jumpTo(move)}}>{desc}</button>
+        <button onClick={() => { jumpTo(move) }}>{desc}</button>
       </li>
     )
   })
@@ -133,5 +143,5 @@ const Game = () => {
 
 // ========================================
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(<Game />);
